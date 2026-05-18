@@ -6,7 +6,7 @@ app.use(cors());
 app.use(express.json());
 
 // ⬇️ YAHAN APNI GEMINI API KEY DAALO
-const GEMINI_API_KEY = "YAHAN_APNI_KEY_DAALO";
+const GEMINI_API_KEY = AIzaSyBkHJhnzIiyYFzfwOmDsjn_QFI6G6WD88E;
 
 const FREE_LIMIT = 5;
 const usageMap = {};
