@@ -1,13 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import dotenv from 'dotenv';
-
-try {
-  dotenv.config();
-} catch (e) {
-  // Direct key use kar rahe hain, toh is error ki tension nahi hai
-}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,17 +8,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// ⚠️ EXTRACTION BLOCK KO HATA KAR DIRECT APNI KEY AISE RAKHO:
-// Quotes (" ") ke andar jo bhi likha ho use mita kar apni AI Studio wali nayi key chipka do.
+const apiKey = "AIzaSyCfjaoK5OeRw5815Xz9PllZK98mvvb-GQI";
 
-const apiKey = "AIzaSyCfjaoK5OeRw5815Xz9PllZK98mvvb-GQI"
-
-// Initialize directly without any condition
+// Initialize Gemini (Ab yeh sirf ek hi baar declare ho raha hai)
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-
-const genAI = new GoogleGenerativeAI(apiKey || "DUMMY_KEY");
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 const FREE_LIMIT = 5;
