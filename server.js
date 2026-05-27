@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,8 +11,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// Initialize Latest Gemini API
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Stable initialization syntax
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Yahan hum gemini-2.5-flash use kar rahe hain jo bilkul latest aur super fast hai
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 const FREE_LIMIT = 5;
 const usageMap = {};
@@ -57,13 +59,8 @@ ${customInput ? 'Extra details: ' + customInput : ''}
 Respond ONLY in this exact JSON format, no extra text:
 {"bg_prompt":"detailed background prompt here","video_prompt":"cinematic animation prompt here","color_palette":["#hex1","#hex2","#hex3","#hex4"],"pro_tip":"one expert tip here"}`;
 
-    // gemini-2.5-flash use kar rahe hain jo fast aur stable hai
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-    });
-
-    const text = response.text;
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
     const clean = text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
@@ -78,4 +75,4 @@ Respond ONLY in this exact JSON format, no extra text:
 app.listen(PORT, () => {
   console.log(`K Creates backend running on port ${PORT}`);
 });
-  
+                         
