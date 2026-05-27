@@ -15,13 +15,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// ⚠️ HARDCODED API KEY METHOD:
-// Niche diye gaye quotes ke andar apni Google AI Studio wali asli key paste kar do
-const apiKey = "AIzaSy_PASTE_YOUR_KEY_HERE";
+// ⚠️ EXTRACTION BLOCK KO HATA KAR DIRECT APNI KEY AISE RAKHO:
+// Quotes (" ") ke andar jo bhi likha ho use mita kar apni AI Studio wali nayi key chipka do.
 
-if (!apiKey || apiKey.includes("PASTE_YOUR_KEY")) {
-  console.error("CRITICAL ERROR: Please replace 'AIzaSyD1OoEntfKt4B8V3ogyr-g2L4rcK0D-Fwk' with your real Gemini API key!");
-}
+const apiKey = "AIzaSyCfjaoK5OeRw5815Xz9PllZK98mvvb-GQI"
+
+// Initialize directly without any condition
+const genAI = new GoogleGenerativeAI(apiKey);
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
 
 const genAI = new GoogleGenerativeAI(apiKey || "DUMMY_KEY");
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
