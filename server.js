@@ -3,7 +3,11 @@ import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 
-dotenv.config();
+try {
+  dotenv.config();
+} catch (e) {
+  // Direct key use kar rahe hain, toh is error ki tension nahi hai
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,9 +15,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// Stable initialization syntax
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-// Yahan hum gemini-2.5-flash use kar rahe hain jo bilkul latest aur super fast hai
+// ⚠️ HARDCODED API KEY METHOD:
+// Niche diye gaye quotes ke andar apni Google AI Studio wali asli key paste kar do
+const apiKey = "AIzaSy_PASTE_YOUR_KEY_HERE";
+
+if (!apiKey || apiKey.includes("PASTE_YOUR_KEY")) {
+  console.error("CRITICAL ERROR: Please replace 'AIzaSyD1OoEntfKt4B8V3ogyr-g2L4rcK0D-Fwk' with your real Gemini API key!");
+}
+
+const genAI = new GoogleGenerativeAI(apiKey || "DUMMY_KEY");
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 const FREE_LIMIT = 5;
@@ -67,12 +77,11 @@ Respond ONLY in this exact JSON format, no extra text:
     res.json(parsed);
 
   } catch (e) {
-    console.error('Error:', e.message);
-    res.status(500).json({ error: 'Generation failed. Try again!' });
+    console.error('Generation Error Log:', e.message);
+    res.status(500).json({ error: `Generation failed: ${e.message}` });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`K Creates backend running on port ${PORT}`);
 });
-                         
