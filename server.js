@@ -8,10 +8,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// 🔒 Yeh line automatic Render ke environment se key uthayegi
 const apiKey = process.env.GEMINI_API_KEY;
 
-// Initialize Gemini
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
@@ -60,9 +58,15 @@ Respond ONLY in this exact JSON format, no extra text:
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
-    const clean = text.replace(/```json|
-```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    const clean = text.replace(/===\s*json|===/g, '').trim();
+    
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch (jsonErr) {
+      const fallbackClean = text.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(fallbackClean);
+    }
 
     res.json(parsed);
 
@@ -75,4 +79,3 @@ Respond ONLY in this exact JSON format, no extra text:
 app.listen(PORT, () => {
   console.log(`K Creates backend running on port ${PORT}`);
 });
-      
